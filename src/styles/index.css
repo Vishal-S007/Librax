@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Design tokens ---------- */
+:root {
+  --canvas: 246 244 239;
+  --surface: 255 255 255;
+  --surface-raised: 251 250 247;
+  --surface-sunken: 238 235 228;
+  --line: 224 219 208;
+  --line-strong: 196 189 175;
+  --ink: 28 30 38;
+  --ink-muted: 88 92 104;
+  --ink-faint: 132 135 146;
+  --brass: 168 112 28;
+  --brass-soft: 247 233 206;
+  --brass-ink: 255 255 255;
+  --sage: 44 122 98;
+  --sage-soft: 217 238 229;
+  --rose: 184 52 70;
+  --rose-soft: 250 223 226;
+  --sky: 44 104 170;
+  --sky-soft: 218 232 248;
+  --plum: 118 74 160;
+  --plum-soft: 236 226 247;
+
+  --radius-card: 14px;
+  --radius-control: 9px;
+  --shadow-card: 0 1px 0 rgb(0 0 0 / 0.02), 0 1px 3px rgb(30 25 15 / 0.06);
+  --shadow-pop: 0 12px 40px -8px rgb(30 25 15 / 0.22), 0 2px 6px rgb(30 25 15 / 0.08);
+  --shadow-book: 0 1px 1px rgb(0 0 0 / 0.12), 0 10px 24px -10px rgb(20 15 5 / 0.45);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+
+.dark {
+  --canvas: 11 13 18;
+  --surface: 19 22 30;
+  --surface-raised: 26 30 41;
+  --surface-sunken: 14 16 22;
+  --line: 38 43 56;
+  --line-strong: 58 64 80;
+  --ink: 236 233 226;
+  --ink-muted: 160 163 176;
+  --ink-faint: 112 117 132;
+  --brass: 232 178 92;
+  --brass-soft: 58 44 22;
+  --brass-ink: 24 18 8;
+  --sage: 127 183 164;
+  --sage-soft: 22 46 40;
+  --rose: 239 120 132;
+  --rose-soft: 62 24 32;
+  --sky: 124 170 228;
+  --sky-soft: 22 36 58;
+  --plum: 184 152 232;
+  --plum-soft: 40 30 58;
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-pop: 0 18px 50px -10px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.05);
+  --shadow-book: 0 1px 1px rgb(0 0 0 / 0.4), 0 14px 30px -12px rgb(0 0 0 / 0.85);
+  color-scheme: dark;
+}
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body { @apply bg-canvas text-ink font-sans; font-feature-settings: 'cv11', 'ss01'; }
+  ::selection { background: rgb(var(--brass) / 0.3); }
+  :focus-visible { outline: 2px solid rgb(var(--brass)); outline-offset: 2px; border-radius: 4px; }
+  h1, h2, h3 { @apply font-display tracking-tight; }
+  * { scrollbar-width: thin; scrollbar-color: rgb(var(--line-strong)) transparent; }
+}
+
+@layer components {
+  .card { @apply rounded-card border border-line bg-surface/85 shadow-card backdrop-blur-md; }
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-faint; }
+  .tabular { font-variant-numeric: tabular-nums; }
+  .paper-grain {
+    background-image:
+      radial-gradient(ellipse 80% 60% at 0% 0%, rgb(var(--brass) / 0.08), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 100% 0%, rgb(var(--sage) / 0.06), transparent 60%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- Cinematic sign-in (video background) ---------- */
+.liquid-glass, .login-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+/* The sign-in card holds a form, so it gets a deeper tint and blur for legible text over moving video. */
+.login-glass {
+  background: rgba(6, 18, 30, 0.55);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+.liquid-glass::before, .login-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+    rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+    rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+@keyframes fade-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-rise { animation: fade-rise 0.8s ease-out both; }
+.animate-fade-rise-delay { animation: fade-rise 0.8s ease-out 0.2s both; }
+.animate-fade-rise-delay-2 { animation: fade-rise 0.8s ease-out 0.4s both; }
